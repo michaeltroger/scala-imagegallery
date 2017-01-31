@@ -53,18 +53,18 @@ object SwingApp extends SimpleSwingApplication {
       if (! (200 to 299).contains(wsResponse.status)) {
         sys.error(s"Received unexpected status ${wsResponse.status} : ${wsResponse.body}")
       }
-      println(s"OK, received ${wsResponse.body}")
+      //println(s"OK, received ${wsResponse.body}")
       val jsonString: JsValue = Json.parse(wsResponse.body)
       val residentFromJson: JsResult[PhotosRoot] = Json.fromJson[PhotosRoot](jsonString)
 
-      println(residentFromJson)
+      //println(residentFromJson)
       residentFromJson match {
         case JsSuccess(r: PhotosRoot, path: JsPath) =>
           val id = r.photos.photo(0).id
           println("id: " + id)
         case e: JsError => println("Errors: " + JsError.toJson(e).toString())
       }
-      
+
       //println(s"The response header Content-Length was ${wsResponse.header("Content-Length")}")
     }
 
