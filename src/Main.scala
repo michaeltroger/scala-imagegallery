@@ -60,8 +60,18 @@ object SwingApp extends SimpleSwingApplication {
       //println(residentFromJson)
       residentFromJson match {
         case JsSuccess(r: PhotosRoot, path: JsPath) =>
-          val id = r.photos.photo(0).id
-          println("id: " + id)
+          val firstPhoto = r.photos.photo(0)
+          val imageUrl = "https://farm" + firstPhoto.farm + ".staticflickr.com/" + firstPhoto.server + "/" + firstPhoto.id + "_" + firstPhoto.secret + ".jpg"
+          println(imageUrl)
+          wsClient.url(imageUrl)
+            .get()
+            .map{wsResponse1 =>
+              if (! (200 to 299).contains(wsResponse1.status)) {
+                sys.error(s"Received unexpected status ${wsResponse1.status} : ${wsResponse1.body}")
+              }
+              println(s"OK, received ${wsResponse1.body}")
+            }
+
         case e: JsError => println("Errors: " + JsError.toJson(e).toString())
       }
 
