@@ -30,15 +30,16 @@ object SwingApp extends SimpleSwingApplication  {
 
   val s = new Dimension(640,480)
 
+  val myPanel = new BoxPanel(Orientation.Vertical) {
+    contents.append(button, imageUrlLabel, imageLabel)
+  }
+
   def top = new MainFrame {
     title = "Flickr"
     minimumSize = s
-    maximumSize = s
     preferredSize = s
 
-    contents = new BoxPanel(Orientation.Vertical) {
-      contents.append(button, imageUrlLabel, imageLabel)
-    }
+    contents = myPanel
 
   }
 
