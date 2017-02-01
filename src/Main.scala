@@ -1,13 +1,20 @@
 import javax.swing.ImageIcon
 
+import akka.stream.ActorMaterializer
+
 import scala.swing._
 import scala.swing.event._
-import play.api.libs.ws.ning.NingWSClient
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json._
+import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.ahc.AhcWSClient
 
-object SwingApp extends SimpleSwingApplication {
+import scala.concurrent.Future
+
+object SwingApp extends SimpleSwingApplication  {
+  implicit val actorSystem = akka.actor.ActorSystem()
+  implicit val wsClient = AhcWSClient()(ActorMaterializer()(actorSystem))
+
+  import scala.concurrent.ExecutionContext.Implicits.global
 
   var button = new Button {
     text = "Next image"
@@ -44,8 +51,9 @@ object SwingApp extends SimpleSwingApplication {
 
 
   def fetchImage() : Unit = {
-    val wsClient = NingWSClient()
-    wsClient
+
+    val latestImagesListRequest: WSRequest =
+      wsClient
       .url("https://api.flickr.com/services/rest/")
       .withQueryString(
         "method" -> "flickr.photos.getRecent",
@@ -54,36 +62,40 @@ object SwingApp extends SimpleSwingApplication {
         "nojsoncallback" -> "1",
         "api_key" -> "aa3c1374cf9bc5d61bae62d08ad9cbba"
       )
-      .get()
-      .map { wsResponse =>
-        if (! (200 to 299).contains(wsResponse.status)) {
-          sys.error(s"Received unexpected status ${wsResponse.status} : ${wsResponse.body}")
-        }
-        val jsonString: JsValue = Json.parse(wsResponse.body)
-        val residentFromJson: JsResult[PhotosRoot] = Json.fromJson[PhotosRoot](jsonString)
 
-        residentFromJson match {
-          case JsSuccess(r: PhotosRoot, path: JsPath) =>
-            val firstPhoto = r.photos.photo(0)
-            val imageUrl = "https://farm" + firstPhoto.farm + ".staticflickr.com/" + firstPhoto.server + "/" + firstPhoto.id + "_" + firstPhoto.secret + ".jpg"
-            println(imageUrl)
-            wsClient.url(imageUrl)
-              .get()
-              .map{wsResponse1 =>
-                if (! (200 to 299).contains(wsResponse1.status)) {
-                  sys.error(s"Received unexpected status ${wsResponse1.status} : ${wsResponse1.body}")
-                }
-                val bytes = wsResponse1.bodyAsBytes
-                val img = new ImageIcon(bytes)
-                imageLabel.icon = img
-              }
+    val responseFuture: Future[WSResponse] = latestImagesListRequest.get()
 
-          case e: JsError => println("Errors: " + JsError.toJson(e).toString())
-        }
-
+    responseFuture.map {wsResponse =>
+      if (! (200 to 299).contains(wsResponse.status)) {
+        sys.error(s"Received unexpected status ${wsResponse.status} : ${wsResponse.body}")
       }
-  }
+      val jsonString: JsValue = Json.parse(wsResponse.body)
+      val residentFromJson: JsResult[PhotosRoot] = Json.fromJson[PhotosRoot](jsonString)
 
+      residentFromJson match {
+        case JsSuccess(r: PhotosRoot, path: JsPath) =>
+          val firstPhoto = r.photos.photo(0)
+          val imageUrl = "https://farm" + firstPhoto.farm + ".staticflickr.com/" + firstPhoto.server + "/" + firstPhoto.id + "_" + firstPhoto.secret + ".jpg"
+          println(imageUrl)
+
+          val imageRequest: WSRequest = wsClient.url(imageUrl)
+          val responseFuture: Future[WSResponse] = imageRequest.get()
+
+          responseFuture.map{wsResponse1 =>
+            if (! (200 to 299).contains(wsResponse1.status)) {
+              sys.error(s"Received unexpected status ${wsResponse1.status} : ${wsResponse1.body}")
+            }
+            val bytesString = wsResponse1.bodyAsBytes
+            val img = new ImageIcon(bytesString.toArray)
+            imageLabel.icon = img
+          }
+
+        case e: JsError => println("Errors: " + JsError.toJson(e).toString())
+      }
+
+    }
+    println("end fetchImage")
+  }
 }
 
 case class PhotosRoot(photos: Photos, stat: String)
