@@ -13,7 +13,6 @@ import scala.concurrent.Future
 object SwingApp extends SimpleSwingApplication  {
   implicit val actorSystem = akka.actor.ActorSystem()
   implicit val wsClient = AhcWSClient()(ActorMaterializer()(actorSystem))
-
   import scala.concurrent.ExecutionContext.Implicits.global
 
   var button = new Button {
@@ -23,7 +22,7 @@ object SwingApp extends SimpleSwingApplication  {
   var imageLabel = new Label {
     listenTo(button)
     reactions += {
-      case ButtonClicked(button) =>
+      case ButtonClicked(b) =>
         fetchImage()
     }
   }
@@ -42,7 +41,6 @@ object SwingApp extends SimpleSwingApplication  {
 
   }
 
-
   implicit val photoRead = Json.reads[Photo]
   implicit val photosReads = Json.reads[Photos]
   implicit val photoRootReads = Json.reads[PhotosRoot]
@@ -54,7 +52,6 @@ object SwingApp extends SimpleSwingApplication  {
   }
 
   def fetchImage() : Unit = {
-
     val latestImagesListRequest: WSRequest =
       wsClient
       .url("https://api.flickr.com/services/rest/")
@@ -98,7 +95,6 @@ object SwingApp extends SimpleSwingApplication  {
           imageLabel.icon = img
         }
       }
-
     }
   }
 }
@@ -106,4 +102,3 @@ object SwingApp extends SimpleSwingApplication  {
 case class PhotosRoot(photos: Photos, stat: String)
 case class Photos(page: Int, pages: Int, perpage: Int, total: Int, photo: Array[Photo])
 case class Photo(id: String, owner: String, secret: String, server: String, farm: Int, title: String, ispublic: Int, isfriend: Int, isfamily: Int)
-
