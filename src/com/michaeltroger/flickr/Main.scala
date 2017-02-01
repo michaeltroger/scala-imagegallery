@@ -7,25 +7,25 @@ import scala.swing.event._
 
 object SwingApp extends SimpleSwingApplication  {
 
-  var searchField = new TextField {
+  val searchField = new TextField {
     columns = 10
   }
 
-  var searchButton = new Button {
+  val searchButton = new Button {
     text = "Search"
   }
 
-  var recentImagesButton = new Button {
+  val recentImagesButton = new Button {
     text = "Recent images"
   }
 
-  var menuPanel = new FlowPanel{
+  val menuPanel = new FlowPanel{
     contents.append(searchField, searchButton, recentImagesButton)
     val s = new Dimension(800,10)
     maximumSize = s
   }
 
-  var imagePanel = new FlowPanel {
+  val imagePanel = new FlowPanel {
     for (i <- 1 to 10) {
       contents.append(
         new Label{
@@ -38,9 +38,10 @@ object SwingApp extends SimpleSwingApplication  {
     }
 
   }
-  
-  val recentImages = new RecentImages(imagePanel)
-  val searchImages = new SearchImages(imagePanel)
+
+  val recentImages = RecentImages(imagePanel)
+  val searchImages = SearchImages(imagePanel)
+  recentImages.getImageUrls()
 
   recentImagesButton.reactions += {
     case b : ButtonClicked => recentImages.getImageUrls()
@@ -66,7 +67,7 @@ object SwingApp extends SimpleSwingApplication  {
   }
 
   def openWebPage(url: String): Unit = {
-    Desktop.getDesktop().browse(new URL(url).toURI())
+    Desktop.getDesktop.browse(new URL(url).toURI)
   }
 }
 

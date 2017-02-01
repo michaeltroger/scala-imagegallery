@@ -21,8 +21,8 @@ trait UpdateImages {
   implicit val photosReads = Json.reads[Photos]
   implicit val photoRootReads = Json.reads[PhotosRoot]
 
-  var imagePanel : FlowPanel
-  var queryString: Array[(String, String)]
+  val imagePanel : FlowPanel
+  val queryString: Array[(String, String)]
 
   def getImageUrls(additionalParam: (String,String) = ("", "")): Unit = {
     val queryStringsExtended : ListBuffer[(String, String)] = queryString.to[ListBuffer]

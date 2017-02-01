@@ -2,9 +2,9 @@ package com.michaeltroger.flickr
 
 import scala.swing.FlowPanel
 
-class SearchImages(var imagePanel: FlowPanel) extends UpdateImages {
+class SearchImages(val imagePanel: FlowPanel) extends UpdateImages {
 
-  override var queryString = Array(
+  override val queryString = Array(
     "method" -> "flickr.photos.search",
     "per_page" -> "10",
     "format" -> "json",
@@ -13,4 +13,8 @@ class SearchImages(var imagePanel: FlowPanel) extends UpdateImages {
     "sort" -> "relevance"
   )
 
+}
+
+object SearchImages {
+  def apply(imagePanel: FlowPanel): SearchImages = new SearchImages(imagePanel)
 }
