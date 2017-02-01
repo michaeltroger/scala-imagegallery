@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6ade1b94-3751-4a07-b4da-2f16e9430327" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/michaeltroger/flickr/Main.scala" afterPath="$PROJECT_DIR$/src/com/michaeltroger/flickr/Main.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/michaeltroger/flickr/RecentImages.scala" afterPath="$PROJECT_DIR$/src/com/michaeltroger/flickr/RecentImages.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/michaeltroger/flickr/SearchImages.scala" afterPath="$PROJECT_DIR$/src/com/michaeltroger/flickr/SearchImages.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/michaeltroger/flickr/UpdateImages.scala" afterPath="$PROJECT_DIR$/src/com/michaeltroger/flickr/UpdateImages.scala" />
     </list>
     <ignored path="flickr-scala.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,11 +27,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="UpdateImages.scala" pinned="false" current-in-tab="true">
+      <file leaf-file-name="UpdateImages.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/michaeltroger/flickr/UpdateImages.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="666">
-              <caret line="37" column="9" selection-start-line="37" selection-start-column="9" selection-end-line="37" selection-end-column="9" />
+            <state relative-caret-position="198">
+              <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
               <folding>
                 <element signature="e#34#62#0" expanded="true" />
               </folding>
@@ -62,13 +59,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Main.scala" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Main.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/michaeltroger/flickr/Main.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="39" column="3" selection-start-line="39" selection-start-column="3" selection-end-line="39" selection-end-column="3" />
+            <state relative-caret-position="126">
+              <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
               <folding>
                 <element signature="e#34#57#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Key.scala" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang.modules/scala-swing_2.11/srcs/scala-swing_2.11-1.0.1-sources.jar!/scala/swing/event/Key.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="47" column="6" selection-start-line="47" selection-start-column="6" selection-end-line="47" selection-end-column="6" />
+              <folding>
+                <element signature="n#!!doc" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -90,16 +99,16 @@
         <option value="$PROJECT_DIR$/build.sbt" />
         <option value="$PROJECT_DIR$/src/main/resources/logback.xml" />
         <option value="$PROJECT_DIR$/src/Main.scala" />
-        <option value="$PROJECT_DIR$/src/com/michaeltroger/flickr/UpdateImages.scala" />
         <option value="$PROJECT_DIR$/src/com/michaeltroger/flickr/SearchImages.scala" />
         <option value="$PROJECT_DIR$/src/com/michaeltroger/flickr/RecentImages.scala" />
+        <option value="$PROJECT_DIR$/src/com/michaeltroger/flickr/UpdateImages.scala" />
         <option value="$PROJECT_DIR$/src/com/michaeltroger/flickr/Main.scala" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="681" />
-    <option name="y" value="27" />
+    <option name="x" value="662" />
+    <option name="y" value="30" />
     <option name="width" value="1833" />
     <option name="height" value="1426" />
   </component>
@@ -527,7 +536,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="681" y="27" width="1833" height="1426" extended-state="0" />
+    <frame x="662" y="30" width="1833" height="1426" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -537,7 +546,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35091743" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35091743" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -781,13 +790,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/michaeltroger/flickr/Main.scala">
+    <entry file="file://$PROJECT_DIR$/src/com/michaeltroger/flickr/SearchImages.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="39" column="3" selection-start-line="39" selection-start-column="3" selection-end-line="39" selection-end-column="3" />
-          <folding>
-            <element signature="e#34#57#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="360">
+          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -799,20 +806,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/michaeltroger/flickr/SearchImages.scala">
+    <entry file="file://$PROJECT_DIR$/src/com/michaeltroger/flickr/UpdateImages.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="198">
+          <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+          <folding>
+            <element signature="e#34#62#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/michaeltroger/flickr/UpdateImages.scala">
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang.modules/scala-swing_2.11/srcs/scala-swing_2.11-1.0.1-sources.jar!/scala/swing/event/Key.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="666">
-          <caret line="37" column="9" selection-start-line="37" selection-start-column="9" selection-end-line="37" selection-end-column="9" />
+        <state relative-caret-position="272">
+          <caret line="47" column="6" selection-start-line="47" selection-start-column="6" selection-end-line="47" selection-end-column="6" />
           <folding>
-            <element signature="e#34#62#0" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/michaeltroger/flickr/Main.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+          <folding>
+            <element signature="e#34#57#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -8,6 +8,7 @@ import scala.swing.event._
 object SwingApp extends SimpleSwingApplication  {
 
   val searchField = new TextField {
+    listenTo(keys)
     columns = 10
   }
 
@@ -27,16 +28,11 @@ object SwingApp extends SimpleSwingApplication  {
 
   val imagePanel = new FlowPanel {
     for (i <- 1 to 10) {
-      contents.append(
-        new Label{
+      contents.append(new Label{
           listenTo(mouse.clicks)
-          reactions += {
-            case e : MouseClicked => openWebPage(e.source.tooltip)
-          }
-        }
-      )
+          reactions += {case e : MouseClicked => openWebPage(e.source.tooltip)}
+      })
     }
-
   }
 
   val recentImages = RecentImages(imagePanel)
@@ -48,6 +44,11 @@ object SwingApp extends SimpleSwingApplication  {
   }
   searchButton.reactions += {
     case b : ButtonClicked =>
+      searchImages.getImageUrls(("text", searchField.text))
+      searchField.text = ""
+  }
+  searchField.reactions += {
+    case KeyPressed(_, Key.Enter, _, _) =>
       searchImages.getImageUrls(("text", searchField.text))
       searchField.text = ""
   }
