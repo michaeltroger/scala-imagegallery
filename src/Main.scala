@@ -31,11 +31,10 @@ object SwingApp extends SimpleSwingApplication  {
   val s = new Dimension(640,480)
 
   def top = new MainFrame {
-    title = "SwingApp"
+    title = "Flickr"
     minimumSize = s
     maximumSize = s
     preferredSize = s
-    var numclicks = 0
 
     contents = new BoxPanel(Orientation.Vertical) {
       contents.append(button, imageLabel)
@@ -44,11 +43,15 @@ object SwingApp extends SimpleSwingApplication  {
   }
 
 
-
   implicit val photoRead = Json.reads[Photo]
   implicit val photosReads = Json.reads[Photos]
   implicit val photoRootReads = Json.reads[PhotosRoot]
 
+  def cleanUp() = { // TODO: not used yet
+    println("cleaning up, closing wsClient and actorsystem")
+    wsClient.close()
+    actorSystem.terminate()
+  }
 
   def fetchImage() : Unit = {
 
@@ -70,31 +73,33 @@ object SwingApp extends SimpleSwingApplication  {
         sys.error(s"Received unexpected status ${wsResponse.status} : ${wsResponse.body}")
       }
       val jsonString: JsValue = Json.parse(wsResponse.body)
-      val residentFromJson: JsResult[PhotosRoot] = Json.fromJson[PhotosRoot](jsonString)
+      val photosRootFromJson: JsResult[PhotosRoot] = Json.fromJson[PhotosRoot](jsonString)
 
-      residentFromJson match {
-        case JsSuccess(r: PhotosRoot, path: JsPath) =>
-          val firstPhoto = r.photos.photo(0)
-          val imageUrl = "https://farm" + firstPhoto.farm + ".staticflickr.com/" + firstPhoto.server + "/" + firstPhoto.id + "_" + firstPhoto.secret + ".jpg"
-          println(imageUrl)
-
-          val imageRequest: WSRequest = wsClient.url(imageUrl)
-          val responseFuture: Future[WSResponse] = imageRequest.get()
-
-          responseFuture.map{wsResponse1 =>
-            if (! (200 to 299).contains(wsResponse1.status)) {
-              sys.error(s"Received unexpected status ${wsResponse1.status} : ${wsResponse1.body}")
-            }
-            val bytesString = wsResponse1.bodyAsBytes
-            val img = new ImageIcon(bytesString.toArray)
-            imageLabel.icon = img
-          }
-
+      var photosRoot : Option[PhotosRoot] = None
+      photosRootFromJson match {
+        case JsSuccess(r: PhotosRoot, path: JsPath) => photosRoot = Option(r)
         case e: JsError => println("Errors: " + JsError.toJson(e).toString())
       }
 
+      if (photosRoot.isDefined) {
+        val firstPhoto = photosRoot.get.photos.photo(0)
+        val imageUrl = "https://farm" + firstPhoto.farm + ".staticflickr.com/" + firstPhoto.server + "/" + firstPhoto.id + "_" + firstPhoto.secret + ".jpg"
+        println(imageUrl)
+
+        val imageRequest: WSRequest = wsClient.url(imageUrl)
+        val imageResponseFuture: Future[WSResponse] = imageRequest.get()
+
+        imageResponseFuture.map{wsResponse1 =>
+          if (! (200 to 299).contains(wsResponse1.status)) {
+            sys.error(s"Received unexpected status ${wsResponse1.status} : ${wsResponse1.body}")
+          }
+          val bytesString = wsResponse1.bodyAsBytes
+          val img = new ImageIcon(bytesString.toArray)
+          imageLabel.icon = img
+        }
+      }
+
     }
-    println("end fetchImage")
   }
 }
 
