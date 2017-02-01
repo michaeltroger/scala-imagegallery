@@ -64,6 +64,7 @@ object SwingApp extends SimpleSwingApplication  {
   }
 
   def fetchImage() : Unit = {
+    //imagePanel.contents.foreach{ case l : Label => l.icon = null } // optionally remove images before inserting the new
     val latestImagesListRequest: WSRequest =
       wsClient
       .url("https://api.flickr.com/services/rest/")
