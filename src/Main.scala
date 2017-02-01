@@ -30,11 +30,13 @@ object SwingApp extends SimpleSwingApplication {
     preferredSize = s
     var numclicks = 0
 
-    contents = new FlowPanel {
+    contents = new BoxPanel(Orientation.Vertical) {
       contents.append(button, imageLabel)
-      border = Swing.EmptyBorder(5, 5, 5, 5)
     }
+
   }
+
+
 
   implicit val photoRead = Json.reads[Photo]
   implicit val photosReads = Json.reads[Photos]
@@ -81,7 +83,7 @@ object SwingApp extends SimpleSwingApplication {
 
       }
   }
-  
+
 }
 
 case class PhotosRoot(photos: Photos, stat: String)
