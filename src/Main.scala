@@ -84,19 +84,22 @@ object SwingApp extends SimpleSwingApplication  {
         val firstPhoto = photosRoot.get.photos.photo(0)
         val imageUrl = "https://farm" + firstPhoto.farm + ".staticflickr.com/" + firstPhoto.server + "/" + firstPhoto.id + "_" + firstPhoto.secret + ".jpg"
         imageUrlLabel.text = imageUrl
-
-        val imageRequest: WSRequest = wsClient.url(imageUrl)
-        val imageResponseFuture: Future[WSResponse] = imageRequest.get()
-
-        imageResponseFuture.map{wsResponse1 =>
-          if (! (200 to 299).contains(wsResponse1.status)) {
-            sys.error(s"Received unexpected status ${wsResponse1.status} : ${wsResponse1.body}")
-          }
-          val bytesString = wsResponse1.bodyAsBytes
-          val img = new ImageIcon(bytesString.toArray)
-          imageLabel.icon = img
-        }
+        getAndDisplayImage(imageUrl)
       }
+    }
+  }
+
+  def getAndDisplayImage(imageUrl: String) {
+    val imageRequest: WSRequest = wsClient.url(imageUrl)
+    val imageResponseFuture: Future[WSResponse] = imageRequest.get()
+
+    imageResponseFuture.map{wsResponse1 =>
+      if (! (200 to 299).contains(wsResponse1.status)) {
+        sys.error(s"Received unexpected status ${wsResponse1.status} : ${wsResponse1.body}")
+      }
+      val bytesString = wsResponse1.bodyAsBytes
+      val img = new ImageIcon(bytesString.toArray)
+      imageLabel.icon = img
     }
   }
 }
