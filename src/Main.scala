@@ -39,7 +39,7 @@ object SwingApp extends SimpleSwingApplication  {
 
   }
 
-  val s = new Dimension(640,480)
+  val s = new Dimension(800,400)
 
   val myPanel = new BoxPanel(Orientation.Vertical) {
     contents.append(button, imagePanel)
@@ -95,7 +95,7 @@ object SwingApp extends SimpleSwingApplication  {
         println("#######")
         for (photo  <- photosRoot.get.photos.photo) {
           val imageUrlWithoutFilending = "https://farm" + photo.farm + ".staticflickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret
-          val miniatureUrlWithoutFilending = imageUrlWithoutFilending + "_s"
+          val miniatureUrlWithoutFilending = imageUrlWithoutFilending + "_q"
           val imageUrl = imageUrlWithoutFilending + ".jpg"
           val miniatureUrl = miniatureUrlWithoutFilending + ".jpg"
           getAndDisplayImage(imageUrl, miniatureUrl)
@@ -106,13 +106,6 @@ object SwingApp extends SimpleSwingApplication  {
   }
 
   def getAndDisplayImage(imageUrl: String, miniatureUrl: String) {
-    println("called getAndDisplayImage")
-    if (loadedImages == 10) {
-      loadedImages = 0
-      imagePanel.contents.foreach{
-        case label : Label => label.icon = null
-      }
-    }
     val imageRequest: WSRequest = wsClient.url(miniatureUrl)
     val imageResponseFuture: Future[WSResponse] = imageRequest.get()
 
@@ -127,6 +120,9 @@ object SwingApp extends SimpleSwingApplication  {
           l.icon = img
           l.tooltip = imageUrl
           loadedImages += 1
+          if (loadedImages == 10) {
+            loadedImages = 0
+          }
       }
     }
   }
