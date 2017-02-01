@@ -1,27 +1,43 @@
-import java.awt.Desktop
+package com.michaeltroger.flickr
+
+import java.awt.{Color, Desktop, FlowLayout}
 import java.net.URL
 import javax.swing.ImageIcon
 
 import akka.stream.ActorMaterializer
-
-import scala.swing._
-import scala.swing.event._
 import play.api.libs.json._
-import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.libs.ws.ahc.AhcWSClient
+import play.api.libs.ws.{WSRequest, WSResponse}
 
 import scala.concurrent.Future
+import scala.swing._
+import scala.swing.event._
 
 object SwingApp extends SimpleSwingApplication  {
   implicit val actorSystem = akka.actor.ActorSystem()
   implicit val wsClient = AhcWSClient()(ActorMaterializer()(actorSystem))
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  var button = new Button {
-    text = "Next images"
+  var searchField = new TextField {
+    columns = 10
+
+  }
+
+  var searchButton = new Button {
+    text = "Search"
+  }
+
+  var recentImagesButton = new Button {
+    text = "Recent images"
     reactions += {
       case b : ButtonClicked => fetchImage()
     }
+  }
+
+  var menuPanel = new FlowPanel{
+    contents.append(searchField, searchButton, recentImagesButton)
+    val s = new Dimension(800,10)
+    maximumSize = s
   }
 
   var imagePanel = new FlowPanel {
@@ -38,13 +54,16 @@ object SwingApp extends SimpleSwingApplication  {
 
   }
 
-  val s = new Dimension(800,400)
+
 
   val myPanel = new BoxPanel(Orientation.Vertical) {
-    contents.append(button, imagePanel)
+    contents.append(menuPanel, imagePanel)
+
   }
 
   def top = new MainFrame {
+    val s = new Dimension(800,400)
+
     title = "Flickr"
     minimumSize = s
     preferredSize = s
