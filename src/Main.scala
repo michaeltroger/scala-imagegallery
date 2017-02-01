@@ -19,9 +19,9 @@ object SwingApp extends SimpleSwingApplication  {
 
   var loadedImages : Int = 0
   var button = new Button {
-    text = "Next image"
+    text = "Next images"
     reactions += {
-      case ButtonClicked(b) => fetchImage()
+      case b : ButtonClicked => fetchImage()
     }
   }
 
@@ -92,6 +92,7 @@ object SwingApp extends SimpleSwingApplication  {
       }
 
       if (photosRoot.isDefined) {
+        println("#######")
         for (photo  <- photosRoot.get.photos.photo) {
           val imageUrlWithoutFilending = "https://farm" + photo.farm + ".staticflickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret
           val miniatureUrlWithoutFilending = imageUrlWithoutFilending + "_s"
@@ -105,6 +106,13 @@ object SwingApp extends SimpleSwingApplication  {
   }
 
   def getAndDisplayImage(imageUrl: String, miniatureUrl: String) {
+    println("called getAndDisplayImage")
+    if (loadedImages == 10) {
+      loadedImages = 0
+      imagePanel.contents.foreach{
+        case label : Label => label.icon = null
+      }
+    }
     val imageRequest: WSRequest = wsClient.url(miniatureUrl)
     val imageResponseFuture: Future[WSResponse] = imageRequest.get()
 
@@ -119,9 +127,6 @@ object SwingApp extends SimpleSwingApplication  {
           l.icon = img
           l.tooltip = imageUrl
           loadedImages += 1
-          if (loadedImages == 10) {
-            loadedImages = 0
-          }
       }
     }
   }
