@@ -10,7 +10,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import scala.concurrent.Future
 import scala.swing.{FlowPanel, Label}
 
-class RecentImages(var imagePanel: FlowPanel) extends UpdateImages {
+class SearchImages(var imagePanel: FlowPanel) extends UpdateImages {
   implicit val actorSystem = akka.actor.ActorSystem()
   implicit val wsClient = AhcWSClient()(ActorMaterializer()(actorSystem))
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,20 +19,24 @@ class RecentImages(var imagePanel: FlowPanel) extends UpdateImages {
   implicit val photosReads = Json.reads[Photos]
   implicit val photoRootReads = Json.reads[PhotosRoot]
 
-  var recentQueryString = Array(
-    "method" -> "flickr.photos.getRecent",
+  var searchQueryString = Array(
+    "method" -> "flickr.photos.search",
     "per_page" -> "10",
     "format" -> "json",
     "nojsoncallback" -> "1",
-    "api_key" -> "aa3c1374cf9bc5d61bae62d08ad9cbba"
+    "api_key" -> "aa3c1374cf9bc5d61bae62d08ad9cbba",
+    "text" -> ""
   )
 
-  def getImageUrls: Unit = {
+  def getImageUrls(searchString: String): Unit = {
     //imagePanel.contents.foreach{ case l : Label => l.icon = null } // optionally remove images before inserting the new
+
+    searchQueryString.update(5, ("text", searchString))
+
     val latestImagesListRequest: WSRequest =
     wsClient
       .url("https://api.flickr.com/services/rest/")
-      .withQueryString(recentQueryString: _*)
+      .withQueryString(searchQueryString: _*)
 
     val responseFuture: Future[WSResponse] = latestImagesListRequest.get()
 
@@ -73,9 +77,8 @@ class RecentImages(var imagePanel: FlowPanel) extends UpdateImages {
     }
   }
   case class PhotosRoot(photos: Photos, stat: String)
-  case class Photos(page: Int, pages: Int, perpage: Int, total: Int, photo: Array[Photo])
+  case class Photos(page: Int, pages: Int, perpage: Int, total: String, photo: Array[Photo])
   case class Photo(id: String, owner: String, secret: String, server: String, farm: Int, title: String, ispublic: Int, isfriend: Int, isfamily: Int)
 
+
 }
-
-
