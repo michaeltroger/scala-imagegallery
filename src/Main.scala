@@ -22,10 +22,11 @@ object SwingApp extends SimpleSwingApplication  {
   var imageLabel = new Label {
     listenTo(button)
     reactions += {
-      case ButtonClicked(b) =>
-        fetchImage()
+      case ButtonClicked(b) => fetchImage()
     }
   }
+
+  var imageUrlLabel = new Label
 
   val s = new Dimension(640,480)
 
@@ -36,7 +37,7 @@ object SwingApp extends SimpleSwingApplication  {
     preferredSize = s
 
     contents = new BoxPanel(Orientation.Vertical) {
-      contents.append(button, imageLabel)
+      contents.append(button, imageUrlLabel, imageLabel)
     }
 
   }
@@ -81,7 +82,7 @@ object SwingApp extends SimpleSwingApplication  {
       if (photosRoot.isDefined) {
         val firstPhoto = photosRoot.get.photos.photo(0)
         val imageUrl = "https://farm" + firstPhoto.farm + ".staticflickr.com/" + firstPhoto.server + "/" + firstPhoto.id + "_" + firstPhoto.secret + ".jpg"
-        println(imageUrl)
+        imageUrlLabel.text = imageUrl
 
         val imageRequest: WSRequest = wsClient.url(imageUrl)
         val imageResponseFuture: Future[WSResponse] = imageRequest.get()
