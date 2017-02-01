@@ -11,8 +11,7 @@ import scala.concurrent.Future
 import scala.swing.{FlowPanel, Label}
 
 class SearchImages(var imagePanel: FlowPanel) extends UpdateImages {
-  implicit val actorSystem = akka.actor.ActorSystem()
-  implicit val wsClient = AhcWSClient()(ActorMaterializer()(actorSystem))
+
   import scala.concurrent.ExecutionContext.Implicits.global
 
   implicit val photoRead = Json.reads[Photo]
@@ -25,13 +24,14 @@ class SearchImages(var imagePanel: FlowPanel) extends UpdateImages {
     "format" -> "json",
     "nojsoncallback" -> "1",
     "api_key" -> "aa3c1374cf9bc5d61bae62d08ad9cbba",
+    "sort" -> "relevance",
     "text" -> ""
   )
 
   def getImageUrls(searchString: String): Unit = {
     //imagePanel.contents.foreach{ case l : Label => l.icon = null } // optionally remove images before inserting the new
 
-    searchQueryString.update(5, ("text", searchString))
+    searchQueryString.update(6, ("text", searchString))
 
     val latestImagesListRequest: WSRequest =
     wsClient
@@ -63,19 +63,7 @@ class SearchImages(var imagePanel: FlowPanel) extends UpdateImages {
     }
   }
 
-  def updateImages(imageUrl: String, miniatureUrl: String, index: Int) : Unit = {
-    val imageRequest: WSRequest = wsClient.url(miniatureUrl)
-    val imageResponseFuture: Future[WSResponse] = imageRequest.get()
-    imageResponseFuture.map{ wsResponse1 =>
-      val bytesString = wsResponse1.bodyAsBytes
-      val img = new ImageIcon(bytesString.toArray)
-      imagePanel.contents(index) match {
-        case l : Label =>
-          l.icon = img
-          l.tooltip = imageUrl
-      }
-    }
-  }
+
   case class PhotosRoot(photos: Photos, stat: String)
   case class Photos(page: Int, pages: Int, perpage: Int, total: String, photo: Array[Photo])
   case class Photo(id: String, owner: String, secret: String, server: String, farm: Int, title: String, ispublic: Int, isfriend: Int, isfamily: Int)
