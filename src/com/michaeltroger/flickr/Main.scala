@@ -38,11 +38,7 @@ object SwingApp extends SimpleSwingApplication  {
     }
 
   }
-
-
-
-
-
+  
   val recentImages = new RecentImages(imagePanel)
   val searchImages = new SearchImages(imagePanel)
 

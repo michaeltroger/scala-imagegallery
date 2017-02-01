@@ -6,7 +6,6 @@ import akka.stream.ActorMaterializer
 import play.api.libs.json._
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.libs.ws.ahc.AhcWSClient
-import play.api.routing.sird._
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
