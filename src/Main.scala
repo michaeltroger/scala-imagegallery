@@ -93,16 +93,19 @@ object SwingApp extends SimpleSwingApplication  {
 
       if (photosRoot.isDefined) {
         for (photo  <- photosRoot.get.photos.photo) {
-          val imageUrl = "https://farm" + photo.farm + ".staticflickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret + ".jpg"
-          getAndDisplayImage(imageUrl)
+          val imageUrlWithoutFilending = "https://farm" + photo.farm + ".staticflickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret
+          val miniatureUrlWithoutFilending = imageUrlWithoutFilending + "_s"
+          val imageUrl = imageUrlWithoutFilending + ".jpg"
+          val miniatureUrl = miniatureUrlWithoutFilending + ".jpg"
+          getAndDisplayImage(imageUrl, miniatureUrl)
         }
 
       }
     }
   }
 
-  def getAndDisplayImage(imageUrl: String) {
-    val imageRequest: WSRequest = wsClient.url(imageUrl)
+  def getAndDisplayImage(imageUrl: String, miniatureUrl: String) {
+    val imageRequest: WSRequest = wsClient.url(miniatureUrl)
     val imageResponseFuture: Future[WSResponse] = imageRequest.get()
 
     imageResponseFuture.map{wsResponse1 =>
