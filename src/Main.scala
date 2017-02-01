@@ -1,17 +1,30 @@
+import java.awt.image.BufferedImage
+import java.io._
+import java.sql.Blob
+import javax.imageio.ImageIO
+import javax.swing.{ImageIcon, JFileChooser}
+
+import com.sun.javafx.tk.Toolkit
+import com.sun.prism.Image
+
 import scala.swing._
 import scala.swing.event._
-
 import play.api.libs.ws.ning.NingWSClient
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json._
 
 object SwingApp extends SimpleSwingApplication {
 
+  var button = new Button {
+    text = "I am a button"
+  }
   def top = new MainFrame {
     title = "SwingApp"
     var numclicks = 0
 
-    object label extends Label {
+
+    val label = new Label{
       val prefix = "Number of button clicks: "
       text = prefix + "0  "
       listenTo(button)
@@ -22,9 +35,8 @@ object SwingApp extends SimpleSwingApplication {
       }
     }
 
-    object button extends Button {
-      text = "I am a button"
-    }
+
+
 
     contents = new FlowPanel {
       contents.append(button, label)
@@ -69,7 +81,22 @@ object SwingApp extends SimpleSwingApplication {
               if (! (200 to 299).contains(wsResponse1.status)) {
                 sys.error(s"Received unexpected status ${wsResponse1.status} : ${wsResponse1.body}")
               }
-              println(s"OK, received ${wsResponse1.body}")
+              //println(s"OK, received ${wsResponse1.body}")
+
+              button.text = "haha"
+              println("my:")
+              println(wsResponse1.bodyAsBytes)
+              val bytes = wsResponse1.bodyAsBytes
+              val img = new ImageIcon(bytes)
+              Dialog.showMessage(message = null, icon = img)
+
+              //val out = new FileOutputStream("/home/m/Projects/flickr-scala/the-file-name")
+              //out.write(bytes)
+              //out.close()
+
+
+              //val img1 : BufferedImage = ImageIO.read(new ByteArrayInputStream(bytes));
+              //Dialog.showMessage(message = null, icon = img1)
             }
 
         case e: JsError => println("Errors: " + JsError.toJson(e).toString())
