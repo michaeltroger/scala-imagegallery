@@ -1,3 +1,5 @@
+import java.awt.Desktop
+import java.net.URL
 import javax.swing.ImageIcon
 
 import akka.stream.ActorMaterializer
@@ -15,23 +17,32 @@ object SwingApp extends SimpleSwingApplication  {
   implicit val wsClient = AhcWSClient()(ActorMaterializer()(actorSystem))
   import scala.concurrent.ExecutionContext.Implicits.global
 
+  var loadedImages : Int = 0
   var button = new Button {
     text = "Next image"
-  }
-
-  var imageLabel = new Label {
-    listenTo(button)
     reactions += {
       case ButtonClicked(b) => fetchImage()
     }
   }
 
-  var imageUrlLabel = new Label
+  var imagePanel = new FlowPanel {
+    for (i <- 1 to 10) {
+      contents.append(
+        new Label{
+          listenTo(mouse.clicks)
+          reactions += {
+            case e : MouseClicked => openWebPage(e.source.tooltip)
+          }
+        }
+      )
+    }
+
+  }
 
   val s = new Dimension(640,480)
 
   val myPanel = new BoxPanel(Orientation.Vertical) {
-    contents.append(button, imageUrlLabel, imageLabel)
+    contents.append(button, imagePanel)
   }
 
   def top = new MainFrame {
@@ -81,10 +92,11 @@ object SwingApp extends SimpleSwingApplication  {
       }
 
       if (photosRoot.isDefined) {
-        val firstPhoto = photosRoot.get.photos.photo(0)
-        val imageUrl = "https://farm" + firstPhoto.farm + ".staticflickr.com/" + firstPhoto.server + "/" + firstPhoto.id + "_" + firstPhoto.secret + ".jpg"
-        imageUrlLabel.text = imageUrl
-        getAndDisplayImage(imageUrl)
+        for (photo  <- photosRoot.get.photos.photo) {
+          val imageUrl = "https://farm" + photo.farm + ".staticflickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret + ".jpg"
+          getAndDisplayImage(imageUrl)
+        }
+
       }
     }
   }
@@ -99,8 +111,20 @@ object SwingApp extends SimpleSwingApplication  {
       }
       val bytesString = wsResponse1.bodyAsBytes
       val img = new ImageIcon(bytesString.toArray)
-      imageLabel.icon = img
+      imagePanel.contents(loadedImages) match {
+        case l : Label =>
+          l.icon = img
+          l.tooltip = imageUrl
+          loadedImages += 1
+          if (loadedImages == 10) {
+            loadedImages = 0
+          }
+      }
     }
+  }
+
+  def openWebPage(url: String): Unit = {
+    Desktop.getDesktop().browse(new URL(url).toURI())
   }
 }
 
