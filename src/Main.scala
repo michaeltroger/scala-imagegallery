@@ -17,7 +17,6 @@ object SwingApp extends SimpleSwingApplication  {
   implicit val wsClient = AhcWSClient()(ActorMaterializer()(actorSystem))
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  var loadedImages : Int = 0
   var button = new Button {
     text = "Next images"
     reactions += {
@@ -79,9 +78,6 @@ object SwingApp extends SimpleSwingApplication  {
     val responseFuture: Future[WSResponse] = latestImagesListRequest.get()
 
     responseFuture.map {wsResponse =>
-      if (! (200 to 299).contains(wsResponse.status)) {
-        sys.error(s"Received unexpected status ${wsResponse.status} : ${wsResponse.body}")
-      }
       val jsonString: JsValue = Json.parse(wsResponse.body)
       val photosRootFromJson: JsResult[PhotosRoot] = Json.fromJson[PhotosRoot](jsonString)
 
@@ -92,39 +88,33 @@ object SwingApp extends SimpleSwingApplication  {
       }
 
       if (photosRoot.isDefined) {
-        println("#######")
-        for (photo  <- photosRoot.get.photos.photo) {
+        for ((photo, i)  <- photosRoot.get.photos.photo.zipWithIndex) {
           val imageUrlWithoutFilending = "https://farm" + photo.farm + ".staticflickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret
           val miniatureUrlWithoutFilending = imageUrlWithoutFilending + "_q"
           val imageUrl = imageUrlWithoutFilending + ".jpg"
           val miniatureUrl = miniatureUrlWithoutFilending + ".jpg"
-          getAndDisplayImage(imageUrl, miniatureUrl)
+          getAndDisplayImage(imageUrl, miniatureUrl, i)
         }
 
       }
     }
+
+
   }
 
-  def getAndDisplayImage(imageUrl: String, miniatureUrl: String) {
+  def getAndDisplayImage(imageUrl: String, miniatureUrl: String, index: Int)  {
     val imageRequest: WSRequest = wsClient.url(miniatureUrl)
     val imageResponseFuture: Future[WSResponse] = imageRequest.get()
-
-    imageResponseFuture.map{wsResponse1 =>
-      if (! (200 to 299).contains(wsResponse1.status)) {
-        sys.error(s"Received unexpected status ${wsResponse1.status} : ${wsResponse1.body}")
-      }
+    imageResponseFuture.map{ wsResponse1 =>
       val bytesString = wsResponse1.bodyAsBytes
       val img = new ImageIcon(bytesString.toArray)
-      imagePanel.contents(loadedImages) match {
+      imagePanel.contents(index) match {
         case l : Label =>
           l.icon = img
           l.tooltip = imageUrl
-          loadedImages += 1
-          if (loadedImages == 10) {
-            loadedImages = 0
-          }
       }
     }
+
   }
 
   def openWebPage(url: String): Unit = {
