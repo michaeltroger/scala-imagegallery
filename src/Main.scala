@@ -20,15 +20,15 @@ object SwingApp extends SimpleSwingApplication {
         fetchImage()
     }
   }
+
   val s = new Dimension(640,480)
+
   def top = new MainFrame {
     title = "SwingApp"
     minimumSize = s
     maximumSize = s
     preferredSize = s
     var numclicks = 0
-
-
 
     contents = new FlowPanel {
       contents.append(button, imageLabel)
@@ -52,17 +52,14 @@ object SwingApp extends SimpleSwingApplication {
         "nojsoncallback" -> "1",
         "api_key" -> "aa3c1374cf9bc5d61bae62d08ad9cbba"
       )
-      //.withHeaders("Cache-Control" -> "no-cache")
       .get()
       .map { wsResponse =>
         if (! (200 to 299).contains(wsResponse.status)) {
           sys.error(s"Received unexpected status ${wsResponse.status} : ${wsResponse.body}")
         }
-        //println(s"OK, received ${wsResponse.body}")
         val jsonString: JsValue = Json.parse(wsResponse.body)
         val residentFromJson: JsResult[PhotosRoot] = Json.fromJson[PhotosRoot](jsonString)
 
-        //println(residentFromJson)
         residentFromJson match {
           case JsSuccess(r: PhotosRoot, path: JsPath) =>
             val firstPhoto = r.photos.photo(0)
@@ -74,33 +71,17 @@ object SwingApp extends SimpleSwingApplication {
                 if (! (200 to 299).contains(wsResponse1.status)) {
                   sys.error(s"Received unexpected status ${wsResponse1.status} : ${wsResponse1.body}")
                 }
-                //println(s"OK, received ${wsResponse1.body}")
-
-                println("my:")
-                println(wsResponse1.bodyAsBytes)
                 val bytes = wsResponse1.bodyAsBytes
                 val img = new ImageIcon(bytes)
                 imageLabel.icon = img
-                //Dialog.showMessage(message = null, icon = img)
-
-                //val out = new FileOutputStream("/home/m/Projects/flickr-scala/the-file-name")
-                //out.write(bytes)
-                //out.close()
-
-
-                //val img1 : BufferedImage = ImageIO.read(new ByteArrayInputStream(bytes));
-                //Dialog.showMessage(message = null, icon = img1)
               }
 
           case e: JsError => println("Errors: " + JsError.toJson(e).toString())
         }
 
-        //println(s"The response header Content-Length was ${wsResponse.header("Content-Length")}")
       }
   }
-
-
-
+  
 }
 
 case class PhotosRoot(photos: Photos, stat: String)
