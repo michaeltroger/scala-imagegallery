@@ -47,11 +47,11 @@ object SwingApp extends SimpleSwingApplication  {
   val searchImages = new SearchImages(imagePanel)
 
   recentImagesButton.reactions += {
-    case b : ButtonClicked => recentImages.getImageUrls
+    case b : ButtonClicked => recentImages.getImageUrls()
   }
   searchButton.reactions += {
     case b : ButtonClicked =>
-      searchImages.getImageUrls(searchField.text)
+      searchImages.getImageUrls(("text", searchField.text))
       searchField.text = ""
   }
 
