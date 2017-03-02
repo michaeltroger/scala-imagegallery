@@ -12,23 +12,24 @@ import scala.concurrent.Future
 import scala.swing.{FlowPanel, Label}
 
 trait UpdateImages {
-  implicit val actorSystem = akka.actor.ActorSystem()
-  implicit val wsClient = AhcWSClient()(ActorMaterializer()(actorSystem))
-
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  implicit val photoRead = Json.reads[Photo]
-  implicit val photosReads = Json.reads[Photos]
-  implicit val photoRootReads = Json.reads[PhotosRoot]
+  private[this] implicit val actorSystem = akka.actor.ActorSystem()
+  private[this] implicit val wsClient = AhcWSClient()(ActorMaterializer()(actorSystem))
 
+  private[this] implicit val photoRead = Json.reads[Photo]
+  private[this] implicit val photosReads = Json.reads[Photos]
+  private[this] implicit val photoRootReads = Json.reads[PhotosRoot]
+
+  private[this] val FLICKR_REST_URL : String = "https://api.flickr.com/services/rest/"
   val imagePanel : FlowPanel
-  val queryString: Array[(String, String)]
+  val queryString : Array[(String, String)]
 
-  def getImageUrls(additionalParam: (String,String) = ("", "")): Unit = {
+  def loadImages(additionalParam: (String,String) = ("", "")): Unit = {
     val queryStringsExtended : ListBuffer[(String, String)] = queryString.to[ListBuffer]
     queryStringsExtended += additionalParam
     //imagePanel.contents.foreach{ case l : Label => l.icon = null } // optionally remove images before inserting the new
-    val latestImagesListRequest: WSRequest = wsClient.url("https://api.flickr.com/services/rest/").withQueryString(queryStringsExtended: _*)
+    val latestImagesListRequest: WSRequest = wsClient.url(FLICKR_REST_URL).withQueryString(queryStringsExtended: _*)
     val responseFuture: Future[WSResponse] = latestImagesListRequest.get()
 
     responseFuture.map {wsResponse =>
@@ -47,16 +48,17 @@ trait UpdateImages {
           val miniatureUrlWithoutFilending = imageUrlWithoutFilending + "_q"
           val imageUrl = imageUrlWithoutFilending + ".jpg"
           val miniatureUrl = miniatureUrlWithoutFilending + ".jpg"
-          requestAndUpdateImages(imageUrl, miniatureUrl, i)
+          requestAndDisplayImageInPanel(imageUrl, miniatureUrl, i)
         }
 
       }
     }
   }
 
-  def requestAndUpdateImages(imageUrl: String, miniatureUrl: String, index: Int) : Unit = {
+  private[this] def requestAndDisplayImageInPanel(imageUrl: String, miniatureUrl: String, index: Int) : Unit = {
     val imageRequest: WSRequest = wsClient.url(miniatureUrl)
     val imageResponseFuture: Future[WSResponse] = imageRequest.get()
+    
     imageResponseFuture.map{ wsResponse1 =>
       val bytesString = wsResponse1.bodyAsBytes
       val img = new ImageIcon(bytesString.toArray)

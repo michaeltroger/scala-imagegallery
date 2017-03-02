@@ -11,7 +11,7 @@ object SwingApp extends SimpleSwingApplication  {
 
   val recentImages = RecentImages(imagePanel)
   val searchImages = SearchImages(imagePanel)
-  recentImages.getImageUrls()
+  recentImages.loadImages()
 
   val mainPanel = new BoxPanel(Orientation.Vertical) {
     contents.append(menuPanel, imagePanel)
@@ -52,16 +52,16 @@ object SwingApp extends SimpleSwingApplication  {
     }
 
     recentImagesButton.reactions += {
-      case b : ButtonClicked => recentImages.getImageUrls()
+      case b : ButtonClicked => recentImages.loadImages()
     }
     searchButton.reactions += {
       case b : ButtonClicked =>
-        searchImages.getImageUrls(("text", searchField.text))
+        searchImages.loadImages(("text", searchField.text))
         searchField.text = ""
     }
     searchField.reactions += {
       case KeyPressed(_, Key.Enter, _, _) =>
-        searchImages.getImageUrls(("text", searchField.text))
+        searchImages.loadImages(("text", searchField.text))
         searchField.text = ""
     }
 
