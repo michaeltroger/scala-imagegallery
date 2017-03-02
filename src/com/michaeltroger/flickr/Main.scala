@@ -9,8 +9,8 @@ object SwingApp extends SimpleSwingApplication  {
   val menuPanel = createMenuPanel()
   val imagePanel = createImagePanel()
 
-  val recentImages = RecentImages(imagePanel)
-  val searchImages = SearchImages(imagePanel)
+  val recentImages = RecentImages(imagePanel, removeImagesBeforeInsertingNew = false)
+  val searchImages = SearchImages(imagePanel, removeImagesBeforeInsertingNew = false)
   recentImages.loadImages()
 
   val mainPanel = new BoxPanel(Orientation.Vertical) {

@@ -24,11 +24,14 @@ trait UpdateImages {
   private[this] val FLICKR_REST_URL : String = "https://api.flickr.com/services/rest/"
   val imagePanel : FlowPanel
   val queryString : Array[(String, String)]
+  val removeImagesBeforeInsertingNew : Boolean
 
   def loadImages(additionalParam: (String,String) = ("", "")): Unit = {
     val queryStringsExtended : ListBuffer[(String, String)] = queryString.to[ListBuffer]
     queryStringsExtended += additionalParam
-    //imagePanel.contents.foreach{ case l : Label => l.icon = null } // optionally remove images before inserting the new
+    if (removeImagesBeforeInsertingNew) {
+      imagePanel.contents.foreach{ case l : Label => l.icon = null }
+    }
     val latestImagesListRequest: WSRequest = wsClient.url(FLICKR_REST_URL).withQueryString(queryStringsExtended: _*)
     val responseFuture: Future[WSResponse] = latestImagesListRequest.get()
 
@@ -58,7 +61,7 @@ trait UpdateImages {
   private[this] def requestAndDisplayImageInPanel(imageUrl: String, miniatureUrl: String, index: Int) : Unit = {
     val imageRequest: WSRequest = wsClient.url(miniatureUrl)
     val imageResponseFuture: Future[WSResponse] = imageRequest.get()
-    
+
     imageResponseFuture.map{ wsResponse1 =>
       val bytesString = wsResponse1.bodyAsBytes
       val img = new ImageIcon(bytesString.toArray)

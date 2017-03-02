@@ -2,7 +2,7 @@ package com.michaeltroger.flickr
 
 import scala.swing.FlowPanel
 
-class RecentImages(val imagePanel: FlowPanel) extends UpdateImages {
+class RecentImages(val imagePanel : FlowPanel, val removeImagesBeforeInsertingNew : Boolean) extends UpdateImages {
 
   override val queryString = Array(
     "method" -> "flickr.photos.getRecent",
@@ -15,7 +15,7 @@ class RecentImages(val imagePanel: FlowPanel) extends UpdateImages {
 }
 
 object RecentImages {
-  def apply(imagePanel: FlowPanel): RecentImages = new RecentImages(imagePanel)
+  def apply(imagePanel : FlowPanel, removeImagesBeforeInsertingNew : Boolean) : RecentImages = new RecentImages(imagePanel, removeImagesBeforeInsertingNew)
 }
 
 

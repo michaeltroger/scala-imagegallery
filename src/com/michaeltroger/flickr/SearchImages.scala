@@ -2,7 +2,7 @@ package com.michaeltroger.flickr
 
 import scala.swing.FlowPanel
 
-class SearchImages(val imagePanel: FlowPanel) extends UpdateImages {
+class SearchImages(val imagePanel: FlowPanel, val removeImagesBeforeInsertingNew : Boolean) extends UpdateImages {
 
   override val queryString = Array(
     "method" -> "flickr.photos.search",
@@ -16,5 +16,5 @@ class SearchImages(val imagePanel: FlowPanel) extends UpdateImages {
 }
 
 object SearchImages {
-  def apply(imagePanel: FlowPanel): SearchImages = new SearchImages(imagePanel)
+  def apply(imagePanel: FlowPanel, removeImagesBeforeInsertingNew : Boolean): SearchImages = new SearchImages(imagePanel, removeImagesBeforeInsertingNew)
 }
