@@ -9,7 +9,7 @@ class RecentImages(val imagePanel : FlowPanel, val removeImagesBeforeInsertingNe
     "per_page" -> "10",
     "format" -> "json",
     "nojsoncallback" -> "1",
-    "api_key" -> "aa3c1374cf9bc5d61bae62d08ad9cbba"
+    "api_key" -> sys.env("FLICKR_API_KEY")
   )
 
 }
