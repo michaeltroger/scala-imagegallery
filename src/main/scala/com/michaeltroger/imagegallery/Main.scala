@@ -1,5 +1,7 @@
 package com.michaeltroger.imagegallery
 
+import java.awt.Desktop
+import java.net.URL
 import scala.swing._
 import scala.swing.event._
 
@@ -57,11 +59,18 @@ object Main extends SimpleSwingApplication  {
   def createImagePanel(): FlowPanel = {
     val imagePanel = new FlowPanel {
       for (_ <- 1 to 10) {
-        contents.append(new Label)
+        contents.append(new MyLabel {
+           listenTo(mouse.clicks)
+           reactions += {case _: MouseClicked => openWebPage(url)}
+        })
       }
     }
 
     imagePanel
+  }
+
+  def openWebPage(url: String): Unit = {
+    Desktop.getDesktop.browse(new URL(url).toURI)
   }
 }
 

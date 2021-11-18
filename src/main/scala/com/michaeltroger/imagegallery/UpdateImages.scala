@@ -3,21 +3,17 @@ package com.michaeltroger.imagegallery
 import akka.actor.ActorSystem
 
 import javax.swing.ImageIcon
-import akka.stream.ActorMaterializer
 import play.api.libs.json._
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
-import java.awt.Desktop
-import java.net.URL
 import scala.collection.mutable.ListBuffer
-import scala.swing.event.MouseClicked
 import scala.swing.{FlowPanel, Label}
 
 trait UpdateImages {
   import scala.concurrent.ExecutionContext.Implicits.global
 
   private[this] implicit val actorSystem: ActorSystem = akka.actor.ActorSystem()
-  private[this] implicit val wsClient: StandaloneAhcWSClient = StandaloneAhcWSClient()(ActorMaterializer()(actorSystem))
+  private[this] implicit val wsClient: StandaloneAhcWSClient = StandaloneAhcWSClient()
 
   private[this] implicit val photoRead: Reads[Photo] = Json.reads[Photo]
   private[this] implicit val photosReads: Reads[Photos] = Json.reads[Photos]
@@ -67,18 +63,14 @@ trait UpdateImages {
       val bytesString = wsResponse1.bodyAsBytes
       val img = new ImageIcon(bytesString.toArray)
       imagePanel.contents(index) match {
-        case l : Label =>
+        case l : MyLabel =>
           l.icon = img
           l.tooltip = ownerName + ": " + title
-          l.listenTo(l.mouse.clicks)
-          l.reactions += {case e : MouseClicked => openWebPage(imageUrl)}
+          l.url = imageUrl
       }
     }
   }
 
-  def openWebPage(url: String): Unit = {
-    Desktop.getDesktop.browse(new URL(url).toURI)
-  }
 }
 
 case class PhotosRoot(photos: Photos)
