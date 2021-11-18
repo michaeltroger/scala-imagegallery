@@ -24,12 +24,12 @@ trait UpdateImages {
   val removeImagesBeforeInsertingNew : Boolean
 
   def loadImages(additionalParam: (String,String) = ("", "")): Unit = {
-    val queryStringsExtended : ListBuffer[(String, String)] = queryString.to[ListBuffer]
+    val queryStringsExtended : ListBuffer[(String, String)] = queryString.to(ListBuffer)
     queryStringsExtended += additionalParam
     if (removeImagesBeforeInsertingNew) {
       imagePanel.contents.foreach{ case l : Label => l.icon = null }
     }
-    val latestImagesListRequest = wsClient.url(FLICKR_REST_URL).withQueryStringParameters(queryStringsExtended: _*)
+    val latestImagesListRequest = wsClient.url(FLICKR_REST_URL).withQueryStringParameters(queryStringsExtended.toSeq: _*)
     val responseFuture = latestImagesListRequest.get()
 
     responseFuture.map {wsResponse =>
