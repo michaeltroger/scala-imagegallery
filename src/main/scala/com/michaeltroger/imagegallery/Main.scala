@@ -26,7 +26,7 @@ object Main extends SimpleSwingApplication  {
     contents = mainPanel
   }
 
-  def createMenuPanel(): FlowPanel = {
+  private def createMenuPanel(): FlowPanel = {
     val searchField = new TextField {
       listenTo(keys)
       columns = 10
@@ -56,12 +56,12 @@ object Main extends SimpleSwingApplication  {
     menuPanel
   }
 
-  def createImagePanel(): FlowPanel = {
+  private def createImagePanel(): FlowPanel = {
     val imagePanel = new FlowPanel {
       for (_ <- 1 to 10) {
         contents.append(new MyLabel {
            listenTo(mouse.clicks)
-           reactions += {case _: MouseClicked => openWebPage(url)}
+           reactions += {case _: MouseClicked => openWebPage(imageUrl)}
         })
       }
     }
@@ -69,7 +69,7 @@ object Main extends SimpleSwingApplication  {
     imagePanel
   }
 
-  def openWebPage(url: String): Unit = {
+  private def openWebPage(url: String): Unit = {
     Desktop.getDesktop.browse(new URL(url).toURI)
   }
 }

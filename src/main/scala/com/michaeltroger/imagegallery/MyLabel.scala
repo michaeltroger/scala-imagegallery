@@ -3,5 +3,5 @@ package com.michaeltroger.imagegallery
 import scala.swing.Label
 
 class MyLabel extends Label {
-  var url: String = ""
+  var imageUrl: String = ""
 }

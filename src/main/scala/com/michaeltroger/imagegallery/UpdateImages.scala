@@ -66,7 +66,7 @@ trait UpdateImages {
         case l : MyLabel =>
           l.icon = img
           l.tooltip = ownerName + ": " + title
-          l.url = imageUrl
+          l.imageUrl = imageUrl
       }
     }
   }
