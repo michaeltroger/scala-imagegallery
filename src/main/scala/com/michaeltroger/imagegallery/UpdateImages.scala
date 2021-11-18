@@ -7,7 +7,10 @@ import akka.stream.ActorMaterializer
 import play.api.libs.json._
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
+import java.awt.Desktop
+import java.net.URL
 import scala.collection.mutable.ListBuffer
+import scala.swing.event.MouseClicked
 import scala.swing.{FlowPanel, Label}
 
 trait UpdateImages {
@@ -49,14 +52,14 @@ trait UpdateImages {
           val imageUrlWithoutFilending = "https://live.staticflickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret
           val imageUrl = imageUrlWithoutFilending + "_b.jpg"
           val miniatureUrl = imageUrlWithoutFilending + "_q.jpg"
-          requestAndDisplayImageInPanel(imageUrl, miniatureUrl, i)
+          requestAndDisplayImageInPanel(imageUrl = imageUrl, miniatureUrl = miniatureUrl, title = photo.title, index = i)
         }
 
       }
     }
   }
 
-  private[this] def requestAndDisplayImageInPanel(imageUrl: String, miniatureUrl: String, index: Int) : Unit = {
+  private[this] def requestAndDisplayImageInPanel(imageUrl: String, miniatureUrl: String, title: String, index: Int) : Unit = {
     val imageRequest = wsClient.url(miniatureUrl)
     val imageResponseFuture = imageRequest.get()
 
@@ -66,12 +69,18 @@ trait UpdateImages {
       imagePanel.contents(index) match {
         case l : Label =>
           l.icon = img
-          l.tooltip = imageUrl
+          l.tooltip = title
+          l.listenTo(l.mouse.clicks)
+          l.reactions += {case e : MouseClicked => openWebPage(imageUrl)}
       }
     }
+  }
+
+  def openWebPage(url: String): Unit = {
+    Desktop.getDesktop.browse(new URL(url).toURI)
   }
 }
 
 case class PhotosRoot(photos: Photos)
 case class Photos(photo: Array[Photo])
-case class Photo(id: String, secret: String, server: String)
+case class Photo(id: String, secret: String, server: String, title: String)
