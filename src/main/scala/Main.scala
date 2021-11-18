@@ -1,4 +1,4 @@
-package com.michaeltroger.flickr
+package com.michaeltroger.imagegallery
 
 import java.awt.Desktop
 import java.net.URL
@@ -20,7 +20,7 @@ object SwingApp extends SimpleSwingApplication  {
   override def top = new MainFrame {
     val s = new Dimension(800,400)
 
-    title = "Flickr"
+    title = "Image Gallery"
     minimumSize = s
     preferredSize = s
 

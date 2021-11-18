@@ -1,14 +1,11 @@
-package com.michaeltroger.flickr
+package com.michaeltroger.imagegallery
 
 import javax.swing.ImageIcon
-
 import akka.stream.ActorMaterializer
 import play.api.libs.json._
-import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.libs.ws.ahc.AhcWSClient
 
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.Future
 import scala.swing.{FlowPanel, Label}
 
 trait UpdateImages {
@@ -32,8 +29,8 @@ trait UpdateImages {
     if (removeImagesBeforeInsertingNew) {
       imagePanel.contents.foreach{ case l : Label => l.icon = null }
     }
-    val latestImagesListRequest: WSRequest = wsClient.url(FLICKR_REST_URL).withQueryString(queryStringsExtended: _*)
-    val responseFuture: Future[WSResponse] = latestImagesListRequest.get()
+    val latestImagesListRequest = wsClient.url(FLICKR_REST_URL).withQueryString(queryStringsExtended: _*)
+    val responseFuture = latestImagesListRequest.get()
 
     responseFuture.map {wsResponse =>
       val jsonString: JsValue = Json.parse(wsResponse.body)
@@ -59,8 +56,8 @@ trait UpdateImages {
   }
 
   private[this] def requestAndDisplayImageInPanel(imageUrl: String, miniatureUrl: String, index: Int) : Unit = {
-    val imageRequest: WSRequest = wsClient.url(miniatureUrl)
-    val imageResponseFuture: Future[WSResponse] = imageRequest.get()
+    val imageRequest = wsClient.url(miniatureUrl)
+    val imageResponseFuture = imageRequest.get()
 
     imageResponseFuture.map{ wsResponse1 =>
       val bytesString = wsResponse1.bodyAsBytes

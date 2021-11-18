@@ -1,4 +1,4 @@
-package com.michaeltroger.flickr
+package com.michaeltroger.imagegallery
 
 import scala.swing.FlowPanel
 
