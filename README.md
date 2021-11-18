@@ -2,6 +2,7 @@
 ## Loading copyright-free images from Flickr
 Note: This app was created in 2017 when I was a beginner to Scala. 
 So don't expect a perfect code please. In 2021 I updated the project to build with IntelliJ IDEA 2021.2.2, updated the Scala version and all dependencies.
+
 ![Screenshot](screenshots/recording.gif)
 
 The app shows 10 images fitting the search term. 
