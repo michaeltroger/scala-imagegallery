@@ -2,7 +2,7 @@ name := "imagegallery"
 
 version := "1.1"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.15"
 
 idePackagePrefix := Some("com.michaeltroger.imagegallery")
 
