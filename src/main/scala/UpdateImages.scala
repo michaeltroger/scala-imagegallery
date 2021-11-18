@@ -3,7 +3,7 @@ package com.michaeltroger.imagegallery
 import javax.swing.ImageIcon
 import akka.stream.ActorMaterializer
 import play.api.libs.json._
-import play.api.libs.ws.ahc.AhcWSClient
+import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
 import scala.collection.mutable.ListBuffer
 import scala.swing.{FlowPanel, Label}
@@ -12,7 +12,7 @@ trait UpdateImages {
   import scala.concurrent.ExecutionContext.Implicits.global
 
   private[this] implicit val actorSystem = akka.actor.ActorSystem()
-  private[this] implicit val wsClient = AhcWSClient()(ActorMaterializer()(actorSystem))
+  private[this] implicit val wsClient = StandaloneAhcWSClient()(ActorMaterializer()(actorSystem))
 
   private[this] implicit val photoRead = Json.reads[Photo]
   private[this] implicit val photosReads = Json.reads[Photos]
@@ -29,7 +29,7 @@ trait UpdateImages {
     if (removeImagesBeforeInsertingNew) {
       imagePanel.contents.foreach{ case l : Label => l.icon = null }
     }
-    val latestImagesListRequest = wsClient.url(FLICKR_REST_URL).withQueryString(queryStringsExtended: _*)
+    val latestImagesListRequest = wsClient.url(FLICKR_REST_URL).withQueryStringParameters(queryStringsExtended: _*)
     val responseFuture = latestImagesListRequest.get()
 
     responseFuture.map {wsResponse =>
