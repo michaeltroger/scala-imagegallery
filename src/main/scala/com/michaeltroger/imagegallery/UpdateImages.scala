@@ -46,10 +46,9 @@ trait UpdateImages {
 
       if (photosRoot.isDefined) {
         for ((photo, i)  <- photosRoot.get.photos.photo.zipWithIndex) {
-          val imageUrlWithoutFilending = "https://farm" + photo.farm + ".staticflickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret
-          val miniatureUrlWithoutFilending = imageUrlWithoutFilending + "_q"
-          val imageUrl = imageUrlWithoutFilending + ".jpg"
-          val miniatureUrl = miniatureUrlWithoutFilending + ".jpg"
+          val imageUrlWithoutFilending = "https://live.staticflickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret
+          val imageUrl = imageUrlWithoutFilending + "_b.jpg"
+          val miniatureUrl = imageUrlWithoutFilending + "_q.jpg"
           requestAndDisplayImageInPanel(imageUrl, miniatureUrl, i)
         }
 
@@ -75,4 +74,4 @@ trait UpdateImages {
 
 case class PhotosRoot(photos: Photos, stat: String)
 case class Photos(page: Int, pages: Int, perpage: Int, photo: Array[Photo]) // "total" left out -> sometimes int sometimes string
-case class Photo(id: String, owner: String, secret: String, server: String, farm: Int, title: String, ispublic: Int, isfriend: Int, isfamily: Int)
+case class Photo(id: String, owner: String, secret: String, server: String, title: String)
