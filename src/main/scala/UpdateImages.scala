@@ -1,25 +1,24 @@
-package com.michaeltroger.flickr
+package com.michaeltroger.imagegallery
+
+import akka.actor.ActorSystem
 
 import javax.swing.ImageIcon
-
 import akka.stream.ActorMaterializer
 import play.api.libs.json._
-import play.api.libs.ws.{WSRequest, WSResponse}
-import play.api.libs.ws.ahc.AhcWSClient
+import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.Future
 import scala.swing.{FlowPanel, Label}
 
 trait UpdateImages {
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  private[this] implicit val actorSystem = akka.actor.ActorSystem()
-  private[this] implicit val wsClient = AhcWSClient()(ActorMaterializer()(actorSystem))
+  private[this] implicit val actorSystem: ActorSystem = akka.actor.ActorSystem()
+  private[this] implicit val wsClient: StandaloneAhcWSClient = StandaloneAhcWSClient()(ActorMaterializer()(actorSystem))
 
-  private[this] implicit val photoRead = Json.reads[Photo]
-  private[this] implicit val photosReads = Json.reads[Photos]
-  private[this] implicit val photoRootReads = Json.reads[PhotosRoot]
+  private[this] implicit val photoRead: Reads[Photo] = Json.reads[Photo]
+  private[this] implicit val photosReads: Reads[Photos] = Json.reads[Photos]
+  private[this] implicit val photoRootReads: Reads[PhotosRoot] = Json.reads[PhotosRoot]
 
   private[this] val FLICKR_REST_URL : String = "https://api.flickr.com/services/rest/"
   val imagePanel : FlowPanel
@@ -27,13 +26,13 @@ trait UpdateImages {
   val removeImagesBeforeInsertingNew : Boolean
 
   def loadImages(additionalParam: (String,String) = ("", "")): Unit = {
-    val queryStringsExtended : ListBuffer[(String, String)] = queryString.to[ListBuffer]
+    val queryStringsExtended : ListBuffer[(String, String)] = queryString.to(ListBuffer)
     queryStringsExtended += additionalParam
     if (removeImagesBeforeInsertingNew) {
       imagePanel.contents.foreach{ case l : Label => l.icon = null }
     }
-    val latestImagesListRequest: WSRequest = wsClient.url(FLICKR_REST_URL).withQueryString(queryStringsExtended: _*)
-    val responseFuture: Future[WSResponse] = latestImagesListRequest.get()
+    val latestImagesListRequest = wsClient.url(FLICKR_REST_URL).withQueryStringParameters(queryStringsExtended.toSeq: _*)
+    val responseFuture = latestImagesListRequest.get()
 
     responseFuture.map {wsResponse =>
       val jsonString: JsValue = Json.parse(wsResponse.body)
@@ -41,7 +40,7 @@ trait UpdateImages {
 
       var photosRoot : Option[PhotosRoot] = None
       photosRootFromJson match {
-        case JsSuccess(r: PhotosRoot, path: JsPath) => photosRoot = Option(r)
+        case JsSuccess(r: PhotosRoot, _: JsPath) => photosRoot = Option(r)
         case e: JsError => println("Errors: " + JsError.toJson(e).toString())
       }
 
@@ -59,8 +58,8 @@ trait UpdateImages {
   }
 
   private[this] def requestAndDisplayImageInPanel(imageUrl: String, miniatureUrl: String, index: Int) : Unit = {
-    val imageRequest: WSRequest = wsClient.url(miniatureUrl)
-    val imageResponseFuture: Future[WSResponse] = imageRequest.get()
+    val imageRequest = wsClient.url(miniatureUrl)
+    val imageResponseFuture = imageRequest.get()
 
     imageResponseFuture.map{ wsResponse1 =>
       val bytesString = wsResponse1.bodyAsBytes

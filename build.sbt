@@ -1,8 +1,11 @@
-name := "Flickr Scala"
- 
-version := "1.0"
- 
-scalaVersion := "2.11.8"
- 
-libraryDependencies += "org.scala-lang.modules" % "scala-swing_2.11" % "1.0.1"
-libraryDependencies += "com.typesafe.play" %% "play-ws" % "2.5.4"
+name := "imagegallery"
+
+version := "1.1"
+
+scalaVersion := "2.13.7"
+
+idePackagePrefix := Some("com.michaeltroger.imagegallery")
+
+libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0"
+libraryDependencies += "com.typesafe.play" %% "play-ahc-ws-standalone" % "2.0.8"
+libraryDependencies += "com.typesafe.play" %% "play-ws-standalone-json" % "2.0.8"
