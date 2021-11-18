@@ -9,9 +9,8 @@ object ImageGallery extends SimpleSwingApplication  {
   val menuPanel = createMenuPanel()
   val imagePanel = createImagePanel()
 
-  val recentImages = RecentImages(imagePanel, removeImagesBeforeInsertingNew = false)
   val searchImages = SearchImages(imagePanel, removeImagesBeforeInsertingNew = false)
-  recentImages.loadImages()
+  searchImages.loadImages("text", "cat")
 
   val mainPanel = new BoxPanel(Orientation.Vertical) {
     contents.append(menuPanel, imagePanel)
@@ -41,19 +40,12 @@ object ImageGallery extends SimpleSwingApplication  {
       text = "Search"
     }
 
-    val recentImagesButton = new Button {
-      text = "Recent images"
-    }
-
     val menuPanel = new FlowPanel{
-      contents.append(searchField, searchButton, recentImagesButton)
+      contents.append(searchField, searchButton)
       val s = new Dimension(800,10)
       maximumSize = s
     }
 
-    recentImagesButton.reactions += {
-      case b : ButtonClicked => recentImages.loadImages()
-    }
     searchButton.reactions += {
       case b : ButtonClicked =>
         searchImages.loadImages(("text", searchField.text))

@@ -10,7 +10,8 @@ class SearchImages(val imagePanel: FlowPanel, val removeImagesBeforeInsertingNew
     "format" -> "json",
     "nojsoncallback" -> "1",
     "api_key" -> sys.env("FLICKR_API_KEY"),
-    "sort" -> "relevance"
+    "sort" -> "relevance",
+    "license" -> "10" // Public Domain Mark https://creativecommons.org/publicdomain/mark/1.0/
   )
 
 }
