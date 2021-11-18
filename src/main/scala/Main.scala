@@ -5,7 +5,7 @@ import java.net.URL
 import scala.swing._
 import scala.swing.event._
 
-object SwingApp extends SimpleSwingApplication  {
+object ImageGallery extends SimpleSwingApplication  {
   val menuPanel = createMenuPanel()
   val imagePanel = createImagePanel()
 
