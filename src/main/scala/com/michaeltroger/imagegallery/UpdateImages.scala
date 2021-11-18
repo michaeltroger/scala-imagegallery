@@ -52,14 +52,14 @@ trait UpdateImages {
           val imageUrlWithoutFilending = "https://live.staticflickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret
           val imageUrl = imageUrlWithoutFilending + "_b.jpg"
           val miniatureUrl = imageUrlWithoutFilending + "_q.jpg"
-          requestAndDisplayImageInPanel(imageUrl = imageUrl, miniatureUrl = miniatureUrl, title = photo.title, index = i)
+          requestAndDisplayImageInPanel(imageUrl = imageUrl, miniatureUrl = miniatureUrl, title = photo.title, ownerName = photo.ownername, index = i)
         }
 
       }
     }
   }
 
-  private[this] def requestAndDisplayImageInPanel(imageUrl: String, miniatureUrl: String, title: String, index: Int) : Unit = {
+  private[this] def requestAndDisplayImageInPanel(imageUrl: String, miniatureUrl: String, title: String, ownerName: String, index: Int) : Unit = {
     val imageRequest = wsClient.url(miniatureUrl)
     val imageResponseFuture = imageRequest.get()
 
@@ -69,7 +69,7 @@ trait UpdateImages {
       imagePanel.contents(index) match {
         case l : Label =>
           l.icon = img
-          l.tooltip = title
+          l.tooltip = ownerName + ": " + title
           l.listenTo(l.mouse.clicks)
           l.reactions += {case e : MouseClicked => openWebPage(imageUrl)}
       }
@@ -83,4 +83,4 @@ trait UpdateImages {
 
 case class PhotosRoot(photos: Photos)
 case class Photos(photo: Array[Photo])
-case class Photo(id: String, secret: String, server: String, title: String)
+case class Photo(id: String, secret: String, server: String, title: String, ownername: String)
