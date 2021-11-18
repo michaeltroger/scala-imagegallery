@@ -12,14 +12,15 @@ import scala.swing.{FlowPanel, Label}
 trait UpdateImages {
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  private[this] implicit val actorSystem: ActorSystem = akka.actor.ActorSystem()
-  private[this] implicit val wsClient: StandaloneAhcWSClient = StandaloneAhcWSClient()
+  private implicit val actorSystem: ActorSystem = akka.actor.ActorSystem()
+  private implicit val wsClient: StandaloneAhcWSClient = StandaloneAhcWSClient()
 
-  private[this] implicit val photoRead: Reads[Photo] = Json.reads[Photo]
-  private[this] implicit val photosReads: Reads[Photos] = Json.reads[Photos]
-  private[this] implicit val photoRootReads: Reads[PhotosRoot] = Json.reads[PhotosRoot]
+  private implicit val photoRead: Reads[Photo] = Json.reads[Photo]
+  private implicit val photosReads: Reads[Photos] = Json.reads[Photos]
+  private implicit val photoRootReads: Reads[PhotosRoot] = Json.reads[PhotosRoot]
 
-  private[this] val FLICKR_REST_URL : String = "https://api.flickr.com/services/rest/"
+  private val FLICKR_REST_URL : String = "https://api.flickr.com/services/rest/"
+
   val imagePanel : FlowPanel
   val queryString : Array[(String, String)]
   val removeImagesBeforeInsertingNew : Boolean
@@ -55,7 +56,7 @@ trait UpdateImages {
     }
   }
 
-  private[this] def requestAndDisplayImageInPanel(imageUrl: String, miniatureUrl: String, title: String, ownerName: String, index: Int) : Unit = {
+  private def requestAndDisplayImageInPanel(imageUrl: String, miniatureUrl: String, title: String, ownerName: String, index: Int) : Unit = {
     val imageRequest = wsClient.url(miniatureUrl)
     val imageResponseFuture = imageRequest.get()
 
