@@ -60,7 +60,7 @@ trait UpdateImages {
     val imageRequest = wsClient.url(miniatureUrl)
     val imageResponseFuture = imageRequest.get()
 
-    imageResponseFuture.map{ wsResponse1 =>
+    imageResponseFuture.map { wsResponse1 =>
       val bytesString = wsResponse1.bodyAsBytes
       val img = new ImageIcon(bytesString.toArray)
       imagePanel.contents(index) match {
@@ -72,6 +72,6 @@ trait UpdateImages {
   }
 }
 
-case class PhotosRoot(photos: Photos, stat: String)
-case class Photos(page: Int, pages: Int, perpage: Int, photo: Array[Photo]) // "total" left out -> sometimes int sometimes string
-case class Photo(id: String, owner: String, secret: String, server: String, title: String)
+case class PhotosRoot(photos: Photos)
+case class Photos(photo: Array[Photo])
+case class Photo(id: String, secret: String, server: String)
