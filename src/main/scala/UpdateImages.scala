@@ -1,5 +1,7 @@
 package com.michaeltroger.imagegallery
 
+import akka.actor.ActorSystem
+
 import javax.swing.ImageIcon
 import akka.stream.ActorMaterializer
 import play.api.libs.json._
@@ -11,12 +13,12 @@ import scala.swing.{FlowPanel, Label}
 trait UpdateImages {
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  private[this] implicit val actorSystem = akka.actor.ActorSystem()
-  private[this] implicit val wsClient = StandaloneAhcWSClient()(ActorMaterializer()(actorSystem))
+  private[this] implicit val actorSystem: ActorSystem = akka.actor.ActorSystem()
+  private[this] implicit val wsClient: StandaloneAhcWSClient = StandaloneAhcWSClient()(ActorMaterializer()(actorSystem))
 
-  private[this] implicit val photoRead = Json.reads[Photo]
-  private[this] implicit val photosReads = Json.reads[Photos]
-  private[this] implicit val photoRootReads = Json.reads[PhotosRoot]
+  private[this] implicit val photoRead: Reads[Photo] = Json.reads[Photo]
+  private[this] implicit val photosReads: Reads[Photos] = Json.reads[Photos]
+  private[this] implicit val photoRootReads: Reads[PhotosRoot] = Json.reads[PhotosRoot]
 
   private[this] val FLICKR_REST_URL : String = "https://api.flickr.com/services/rest/"
   val imagePanel : FlowPanel
@@ -38,7 +40,7 @@ trait UpdateImages {
 
       var photosRoot : Option[PhotosRoot] = None
       photosRootFromJson match {
-        case JsSuccess(r: PhotosRoot, path: JsPath) => photosRoot = Option(r)
+        case JsSuccess(r: PhotosRoot, _: JsPath) => photosRoot = Option(r)
         case e: JsError => println("Errors: " + JsError.toJson(e).toString())
       }
 

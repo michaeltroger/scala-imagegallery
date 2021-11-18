@@ -4,7 +4,7 @@ import scala.swing.FlowPanel
 
 class SearchImages(val imagePanel: FlowPanel, val removeImagesBeforeInsertingNew : Boolean) extends UpdateImages {
 
-  override val queryString = Array(
+  override val queryString: Array[(String, String)] = Array(
     "method" -> "flickr.photos.search",
     "per_page" -> "10",
     "format" -> "json",
