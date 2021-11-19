@@ -14,3 +14,5 @@ The app only displays images that are without copyright ([Public Domain Mark](ht
 1. [Flickr API key](https://www.flickr.com/services/api/misc.api_keys.html) has to be set as environment variable:
 `FLICKR_API_KEY`
 2. Launch app through IntelliJ IDEA
+
+Author: [Michael Troger](https://michaeltroger.com)
