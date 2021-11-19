@@ -9,7 +9,7 @@ object Main extends SimpleSwingApplication  {
   private val menuPanel = createMenuPanel()
   private val imagePanel = createImagePanel()
 
-  private val searchImages = SeafImages(imagePanel, removeImagesBeforeInsertingNew = false)
+  private val searchImages = SearchImages(imagePanel, removeImagesBeforeInsertingNew = false)
   searchImages.loadImages("text", "cat")
 
   private val mainPanel = new BoxPanel(Orientation.Vertical) {
