@@ -1,5 +1,7 @@
 # A simple Swing Scala image gallery
 ## Loading copyright-free images from [Flickr](https://www.flickr.com/)
+[![CI](https://github.com/michaeltroger/scala-imagegallery/actions/workflows/ci.yml/badge.svg)](https://github.com/michaeltroger/scala-imagegallery/actions/workflows/ci.yml)
+
 Note: This app was created in 2017 when I was a beginner to Scala. 
 So don't expect a perfect code please. In 2021 I updated the project to build with IntelliJ IDEA 2021.2.2, updated the Scala version and all dependencies.
 
